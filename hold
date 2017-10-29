@@ -1,0 +1,75 @@
+# -*- coding: utf-8 -*-
+import scrapy
+#import MySQLdb
+#from banco import MysqlConnector
+
+class Spider(scrapy.Spider):
+    name = "stj"
+
+    def start_requests(self):
+
+        urls = [
+            'https://ww2.stj.jus.br/processo/pesquisa/?termo=&aplicacao=processos.ea&tipoPesquisa=tipoPesquisaGenerica&chkordem=DESC&chkMorto=MORTO'
+        ]
+
+        data = [
+            ('aplicacao', 'processos.ea'),
+            ('acao', 'pushconsultarprocessoconsultalimitenaoatendidasjaincluidas'),
+            ('descemail', ''),
+            ('senha', ''),
+            ('NumPaginaAtual', '4'),
+            ('NumTotalRegistros', '36892'),
+            ('VaiParaPaginaAnterior', 'false'),
+            ('VaiParaPaginaSeguinte', 'true'),
+            ('ComProximaPagina', 'TRUE'),
+            ('totalRegistrosPorPagina', '40'),
+            ('tipoPesquisaSecundaria', ''),
+            ('sequenciaisParteAdvogado', '-1'),
+            ('refinamentoAdvogado', ''),
+            ('refinamentoParte', ''),
+            ('tipoOperacaoFonetica', ''),
+            ('tipoOperacaoFoneticaPhonos', '2'),
+            ('origemOrgaosSelecionados', ''),
+            ('origemUFSelecionados', ''),
+            ('julgadorOrgaoSelecionados', ''),
+            ('tipoRamosDireitoSelecionados', 'AD'),
+            ('situacoesSelecionadas', ''),
+            ('num_processo', ''),
+            ('num_registro', ''),
+            ('numeroUnico', ''),
+            ('numeroOriginario', ''),
+            ('advogadoCodigo', ''),
+            ('dataAutuacaoInicial', ''),
+            ('dataAutuacaoFinal', ''),
+            ('dataPublicacaoInicial', '29/10/2017'),
+            ('dataPublicacaoFinal', '29/07/2017'),
+            ('parteAutor', 'FALSE'),
+            ('parteReu', 'FALSE'),
+            ('parteOutros', 'FALSE'),
+            ('parteNome', ''),
+            ('opcoesFoneticaPhonosParte', '2'),
+            ('quantidadeMinimaTermosPresentesParte', '1'),
+            ('advogadoNome', ''),
+            ('opcoesFoneticaPhonosAdvogado', '2'),
+            ('quantidadeMinimaTermosPresentesAdvogado', '1'),
+            ('conectivo', 'OU'),
+            ('listarProcessosOrdemDescrecente', 'TRUE'),
+            ('listarProcessosOrdemDescrecenteTemp', 'TRUE'),
+            ('listarProcessosAtivosSomente', 'FALSE'),
+            ('listarProcessosEletronicosSomente', 'FALSE'),
+        ]
+
+
+        for i in range(1, 2):
+            data[4] = (
+            'NumPaginaAtual',
+            i)
+            yield scrapy.FormRequest('https://ww2.stj.jus.br/processo/pesquisa/',
+                                        meta={'cookiejar': 1},
+                                        formdata=dict(data),
+                                        dont_filter=True,
+                                        callback=self.lista)
+
+    def lista(self, response):
+
+        self.log(response)
